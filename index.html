@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="index.css"/>
 </head>
 <body>
-  <content>
+  <section>
     <canvas id="myCanvas" class="myCanvas"></canvas>
     <button>
       <label for="file">选择图片</label>
@@ -15,7 +15,7 @@
     </button>
     <button onclick="download()">下载视频</button>
     <video id="myVideo" controls="controls" class="myVideo" style="display: none;"></video>
-  </content>
+  </section>
   <script src="images-to-video.js"></script>
   <script src="index.js"></script>
   <script>
@@ -24,19 +24,19 @@
       const files = input.files
       if(!files || files.length === 0) return
       
-      const fileList = []
-      Object.keys(files).map(key => {
+      const fileList = Object.keys(files).map(key => {
         const file = files[key]
-        fileList.push({
-          file: file,
-          name: file.name,
+        return {
+          file,
+          name: file?.name,
           src: URL.createObjectURL(file)
-        })
+        }
       })
 
       video = await startRecord(document.getElementById('myCanvas'), fileList)
       console.log('video', video)
-      document.getElementById('myVideo').src = video.src
+
+      document.getElementById('myVideo').src = video?.src
       document.getElementById('myVideo').style.display = `block`
     }
     const download = () => {
