@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Images To Video</title>
+  <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+  <content>
+    <canvas id="myCanvas" class="myCanvas"></canvas>
+    <button>
+      <label for="file">选择图片</label>
+      <input type="file" name="file" id="file" accept="image/*" multiple onchange="fileChange(this)">
+    </button>
+    <button onclick="download()">下载视频</button>
+    <video id="myVideo" controls="controls" class="myVideo" style="display: none;"></video>
+  </content>
+  <script src="images-to-video.js"></script>
+  <script src="index.js"></script>
+  <script>
+    let video
+    const fileChange = async (input) => {
+      const files = input.files
+      if(!files || files.length === 0) return
+      
+      const fileList = []
+      Object.keys(files).map(key => {
+        const file = files[key]
+        fileList.push({
+          file: file,
+          name: file.name,
+          src: URL.createObjectURL(file)
+        })
+      })
+
+      video = await startRecord(document.getElementById('myCanvas'), fileList)
+      console.log('video', video)
+      document.getElementById('myVideo').src = video.src
+      document.getElementById('myVideo').style.display = `block`
+    }
+    const download = () => {
+      if (!video) return
+      downloadVideo({ name: video.name, blob: video.blob })
+    }
+  </script>
+</body>
+</html>
